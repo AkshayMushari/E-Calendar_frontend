@@ -3,8 +3,15 @@ To run
 git clone https://github.com/AkshayMushari/E-Calendar_frontend
 
 cd E-Calendar_frontend
+
+
+
 npm install
+
+
 npm install bootstrap react-bootstrap  
+
+
 npm install @fullcalendar/react @fullcalendar/daygrid   
 
 
