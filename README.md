@@ -1,3 +1,18 @@
+To run 
+
+git clone https://github.com/AkshayMushari/E-Calendar_frontend
+
+cd E-Calendar_frontend
+npm install
+npm install bootstrap react-bootstrap  
+npm install @fullcalendar/react @fullcalendar/daygrid   
+
+
+
+
+
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
