@@ -1,0 +1,74 @@
+.dashboard-container {
+    display: flex;
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+}
+
+.sidebar {
+    width: 250px; /* Width of the sidebar */
+    background-color: #f0f0f0; /* Light background for sidebar */
+    padding-right: 20px; /* Padding to separate from main content */
+}
+
+.sidebar h2 {
+    text-align: center;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.sidebar li {
+    padding: 10px;
+    border-bottom: 1px solid #ccc; /* Separator between team members */
+}
+
+.attendance-insights {
+    font-size: 12px; /* Smaller font for insights */
+}
+
+.main-content {
+    flex-grow: 1; /* Allow main content to take remaining space */
+    padding-left: 20px; /* Padding to separate from sidebar */
+}
+
+h1 {
+    text-align: center;
+}
+
+.event-form {
+    margin-top: 20px;
+}
+
+.event-form input {
+    margin-right: 10px;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.event-form button {
+    padding: 10px;
+    background-color: #28a745; /* Green */
+    color: white;
+    border: none;
+    border-radius: 4px;
+}
+
+.event-form button:hover {
+    background-color: #218838; /* Darker green */
+}
+
+.event-list {
+    margin-top: 20px;
+}
+
+.event-list ul {
+    list-style-type: none;
+}
+
+.event-list li {
+    padding: 5px;
+}

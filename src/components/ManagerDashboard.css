@@ -1,0 +1,93 @@
+.dashboard-container {
+    display: flex; /* Use flexbox for layout */
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+}
+
+.sidebar {
+    background-color: #f0f0f0; /* Light background for sidebar */
+}
+
+.left-sidebar {
+    width: 25%; /* Left sidebar width */
+    padding-right: 20px; /* Padding to separate from main content */
+}
+
+.main-content {
+    width: 50%; /* Main content width */
+    padding-left: 20px; /* Padding to separate from sidebars */
+}
+
+.right-sidebar {
+    width: 20%; /* Right sidebar width */
+    margin-left: 5%; /* Space between main content and right sidebar */
+}
+
+.left-sidebar h2,
+.right-sidebar h2 {
+    text-align: center;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.sidebar li {
+    padding: 10px;
+    border-bottom: 1px solid #ccc; /* Separator between team members */
+}
+
+.attendance-insights {
+    font-size: 12px; /* Smaller font for insights */
+}
+
+.attendance-graph {
+    margin-top: 10px;
+    background-color: #e9ecef; /* Light background for graph area */
+    padding: 10px;
+    border-radius: 4px;
+}
+
+h1 {
+    text-align: center;
+}
+
+.event-form {
+    margin-top: 20px; /* Space above the form */
+}
+
+.event-form input {
+    margin-bottom: 10px; /* Space below input fields */
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.event-form button {
+    padding: 10px;
+    background-color: #28a745; /* Green */
+    color: white;
+    border: none;
+    border-radius: 4px;
+}
+
+.event-form button:hover {
+   background-color: #218838; /* Darker green */
+}
+
+/* Adjusting event list section */
+.event-list {
+   margin-top: 20px; /* Space above upcoming events */
+}
+
+.event-list ul {
+   list-style-type: none;
+   padding-left: 0; /* Remove default padding */
+   margin-top: 10px; /* Add some space above the list */
+}
+
+.event-list li {
+   padding: 5px;
+}

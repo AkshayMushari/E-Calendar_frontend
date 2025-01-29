@@ -1,0 +1,58 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Align items to the start of the flex container */
+    height: 100vh; /* Full viewport height */
+    margin: 0; /* Remove default margin */
+    background-color: #f0f0f0; /* Optional background color */
+}
+
+.login-container {
+    max-width: 400px; /* Keep this value to maintain width */
+    width: 100%; /* Make it responsive */
+    padding: 40px; /* Increase padding for more space inside the box */
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional shadow for depth */
+    margin-top: 50px; /* Adjust this value to move the box down */
+}
+
+h2 {
+    text-align: center;
+    font-size: 24px; /* Increase font size for heading */
+}
+
+form div {
+    margin-bottom: 20px; /* Increase space between form elements */
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input {
+    width: 100%;
+    padding: 12px; /* Increase padding for input fields */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px; /* Increase font size for input text */
+}
+
+button {
+    width: 100%;
+    padding: 12px; /* Increase button padding */
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.error-message {
+    color: red;
+}
