@@ -13,9 +13,7 @@ const Login = () => {
 
         // Validate email format
         if (!empIdOrEmail.endsWith('@evernorth.com') && !/^\d+$/.test(empIdOrEmail)) {
-            setError('Please enter a valid Employee ID or Email ');
-            // ending with @evernorth.com
-
+            setError('Please enter a valid Employee ID or Email '); // ending with @evernorth.com
             return;
         }
 
@@ -26,8 +24,7 @@ const Login = () => {
             return;
         }
 
-        console.log('Logging in with:', { empIdOrEmail, password });
-        // Handle login logic here (e.g., API call)
+        console.log('Logging in with:', { empIdOrEmail, password });  // Handle login logic here (e.g., API call)
     };
 
     return (

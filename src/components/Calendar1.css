@@ -1,0 +1,159 @@
+.calendar-container {
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 30px;
+    margin-left: 20px; /* Add margin from the left edge */
+  }
+  
+  .left-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 300px;
+  }
+  
+  .event-form {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-top: 20px;
+  }
+  
+  .event-form h3 {
+    margin-bottom: 15px;
+    color: #333;
+    font-size: 1.2em;
+  }
+  
+  .form-input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  
+  .add-event-btn {
+    width: 100%;
+    padding: 12px;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 15px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+  .add-event-btn:hover {
+    background: #45a049;
+  }
+  
+  .employee-column {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .employee-column h3 {
+    margin-bottom: 15px;
+    color: #333;
+    font-size: 1.2em;
+  }
+  
+  .employee-box {
+    padding: 12px 15px;
+    margin: 8px 0;
+    background: #f8f9fa;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    border: 1px solid #e9ecef;
+  }
+  
+  .employee-box:hover {
+    background: #e9ecef;
+  }
+  
+  .employee-box.selected {
+    background: #4CAF50;
+    color: white;
+    border-color: #45a049;
+  }
+  
+  .calendar-view {
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    grid-column: 2;
+    min-height: 600px;
+  }
+  
+  /* FullCalendar specific styles */
+  .fc .fc-resource-timeline-divider {
+    width: 3px;
+    background-color: #f8f9fa;
+  }
+  
+  .fc .fc-resource-timeline-group-header {
+    font-weight: 600;
+    font-size: 14px;
+  }
+  
+  .fc .fc-timeline-slot-label {
+    font-size: 12px;
+  }
+  
+  .fc .fc-timeline-event {
+    border-radius: 4px;
+    padding: 2px 4px;
+  }
+  
+  .fc .fc-timeline-event .fc-event-main {
+    padding: 2px 4px;
+  }
+  
+  .fc .fc-resource-timeline-header-cell {
+    font-weight: 500;
+    font-size: 14px;
+    padding: 10px;
+    background-color: #f8f9fa;
+  }
+  
+  /* Make the calendar header more prominent */
+  .fc .fc-toolbar-title {
+    font-size: 1.4em !important;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .fc .fc-button-primary {
+    background-color: #4CAF50 !important;
+    border-color: #45a049 !important;
+    font-weight: 500;
+  }
+  
+  .fc .fc-button-primary:hover {
+    background-color: #45a049 !important;
+  }
+  
+  /* Improve event time display */
+  .fc-event-time {
+    font-weight: 600;
+    font-size: 0.9em;
+  }
+  
+  .fc-event-title {
+    font-size: 0.9em;
+    line-height: 1.3;
+  }
+  

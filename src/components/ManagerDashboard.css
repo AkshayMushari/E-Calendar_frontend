@@ -10,12 +10,12 @@
 }
 
 .left-sidebar {
-    width: 25%; /* Left sidebar width */
+    width: 15%; /* Left sidebar width */
     padding-right: 20px; /* Padding to separate from main content */
 }
 
 .main-content {
-    width: 50%; /* Main content width */
+    width: 60%; /* Main content width */
     padding-left: 20px; /* Padding to separate from sidebars */
 }
 
@@ -54,40 +54,62 @@ h1 {
     text-align: center;
 }
 
+.todays-events {
+   margin-top: 20px; /* Space above today's events */
+}
+
+.todays-events ul {
+   list-style-type: none;
+   padding-left: 0; /* Remove default padding */
+   margin-top: 10px; /* Add some space above the list */
+}
+
+.todays-events li {
+   padding: 5px;
+}
+
+/* Adjusting event form section */
 .event-form {
-    margin-top: 20px; /* Space above the form */
+   margin-top: 20px; /* Space above the form */
 }
 
 .event-form input {
-    margin-bottom: 10px; /* Space below input fields */
-    padding: 10px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
+   margin-bottom: 10px; /* Space below input fields */
+   padding: 10px;
+   border-radius: 4px;
+   border: 1px solid #ccc;
 }
 
 .event-form button {
-    padding: 10px;
-    background-color: #28a745; /* Green */
-    color: white;
-    border: none;
-    border-radius: 4px;
+   padding: 10px;
+   background-color: #28a745; /* Green */
+   color: white;
+   border: none;
+   border-radius: 4px;
 }
 
 .event-form button:hover {
    background-color: #218838; /* Darker green */
 }
 
-/* Adjusting event list section */
-.event-list {
-   margin-top: 20px; /* Space above upcoming events */
+/* Toggle button styles */
+.toggle-button {
+   display: block;
+   margin-bottom: 10px; /* Space below the button */
+   padding: 10px;
+   background-color: #007bff; /* Blue button color */
+   color: white;
+   border-radius: 4px;
+   border: none;
+   cursor: pointer;
+   width: calc(100% - 20px); /* Full width minus padding */
 }
 
-.event-list ul {
-   list-style-type: none;
-   padding-left: 0; /* Remove default padding */
-   margin-top: 10px; /* Add some space above the list */
+.toggle-button:hover {
+   background-color: #0056b3; /* Darker blue on hover */
 }
 
-.event-list li {
-   padding: 5px;
+/* Open state styles for sidebar */
+.open {
+   transition: max-height .5s ease-in-out; /* Smooth transition for opening/closing */
 }

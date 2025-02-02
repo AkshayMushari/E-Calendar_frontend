@@ -1,0 +1,95 @@
+.calendar-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 20px;
+  }
+  .employee-box {
+    /* Other styles you might have */
+    color: #333333; /* Dark gray - adjust as needed */
+  }
+  
+  .employee-box.selected {
+    color: rgb(164, 5, 5); /* White text when selected */
+  }
+
+  .employee-box:not(.selected) { /* Or similar */
+    color: rgb(19, 35, 209);
+}
+  /* Left Column (Add Event + Employees) */
+  .left-column {
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+    background: #f9faf8;
+    padding: 15px;
+    border-radius: 8px;
+  }
+  
+  /* Add Event Section */
+  .event-form {
+    background: #0f8a93;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  .event-form input,
+  .event-form select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #c51616;
+    border-radius: 5px;
+  }
+  
+  .event-form button {
+    background: #24a738bc;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .event-form button:hover {
+    background: #88622192;
+  }
+  
+  /* Employee List Section */
+  .employee-column {
+    width: 100%;
+  }
+  
+  .employee-box {
+    padding: 10px;
+    margin-bottom: 8px;
+    color: rgb(255, 255, 255);
+    text-align: center;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .employee-box.selected {
+    border: 2px solid black;
+  }
+  
+  /* Calendar Column */
+  .calendar-view {
+    width: 75%;
+    padding: 15px;
+    border-radius: 8px;
+    background: whitesmoke;
+  }
+  .fc-col-header-cell {
+    padding: 19px !important; /* Increase header cell padding */
+    font-size: 10px;
+    font-weight: bold;
+    text-align: center;
+    text-align: left !important;  /* Move text to the left */
+    padding-left: 0.1px !important; /* Adjust spacing */
+  }
+  /* Center employee names in the resource columns */
+  
+  
