@@ -7,6 +7,7 @@ import { Bar, Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement } from "chart.js";
 import axios from "axios";
 import "./Calendar1.css";
+import LogoutButton from "./LogoutButton";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement);
 
@@ -52,6 +53,7 @@ const EventTypeDonut = ({ selectedEmployeeIds, events }) => {
 
   return (
     <div className="donut-chart">
+    <LogoutButton/>
       <h2>Event Type Distribution</h2>
       <Doughnut 
         data={chartData}
@@ -102,11 +104,13 @@ const NCalendarAndAttendance = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
+        const loggedInUser = JSON.parse(localStorage.getItem('user'));
+
         
-        const managerResponse = await axios.get("http://localhost:8080/manager/findemployee/1");
+        const managerResponse = await axios.get(`http://localhost:8080/manager/findemployee/${loggedInUser.id}`);
         setManager(managerResponse.data);
 
-        const teamResponse = await axios.get("http://localhost:8080/manager/1/team");
+        const teamResponse = await axios.get(`http://localhost:8080/manager/${loggedInUser.id}/team`);
         const managerTeam = teamResponse.data || [];
         setEmployees([managerResponse.data, ...managerTeam]);
 

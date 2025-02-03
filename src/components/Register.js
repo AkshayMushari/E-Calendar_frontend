@@ -5,13 +5,14 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Register = () => {
   const [registerData, setRegisterData] = useState({
-    id: "",  // Employee ID is now part of the state
+    id: "",
     firstName: "",
     lastName: "",
     email: "",
     role: "",
     password: "",
     confirmPassword: "",
+    manager: { id: "" }
   });
 
   const [showModal, setShowModal] = useState(false);
@@ -20,7 +21,19 @@ const Register = () => {
 
   const handleRegisterChange = (e) => {
     const { name, value } = e.target;
-    setRegisterData((prev) => ({ ...prev, [name]: value }));
+    
+    if (name.includes('.')) {
+      const [parent, child] = name.split('.');
+      setRegisterData(prev => ({
+        ...prev,
+        [parent]: {
+          ...prev[parent],
+          [child]: value
+        }
+      }));
+    } else {
+      setRegisterData(prev => ({ ...prev, [name]: value }));
+    }
 
     if (name === "confirmPassword") {
       setPasswordError(value !== registerData.password);
@@ -69,11 +82,14 @@ const Register = () => {
 
     // Prepare the data to send to backend
     const employeeData = {
-      id: registerData.id, // Send the employee id from the form
-      name: `${registerData.firstName} ${registerData.lastName}`,  // Concatenate first and last name
+      id: registerData.id,
+      name: `${registerData.firstName} ${registerData.lastName}`,
       email: registerData.email,
       role: registerData.role,
-      credentials: registerData.password,  // Send password as credentials
+      credentials: registerData.password,
+      manager: {
+        id: registerData.manager.id
+      }
     };
 
     try {
@@ -90,6 +106,7 @@ const Register = () => {
         role: "",
         password: "",
         confirmPassword: "",
+        manager: { id: "" }
       });
     } catch (error) {
       setModalMessage(error.message || "An error occurred during registration.");
@@ -103,7 +120,6 @@ const Register = () => {
     <div>
       <h3 className="text-center mt-4">Register New Employee</h3>
       <Form onSubmit={handleSubmit}>
-        {/* Employee ID Input */}
         <Form.Group className="mb-3" controlId="formId">
           <Form.Label>Employee ID</Form.Label>
           <Form.Control
@@ -167,6 +183,17 @@ const Register = () => {
           </Form.Control>
         </Form.Group>
 
+        <Form.Group className="mb-3" controlId="formManagerId">
+          <Form.Label>Manager ID</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Enter manager ID"
+            name="manager.id"
+            value={registerData.manager.id}
+            onChange={handleRegisterChange}
+          />
+        </Form.Group>
+
         <Form.Group className="mb-3" controlId="formPassword">
           <Form.Label>Password</Form.Label>
           <Form.Control
@@ -199,10 +226,9 @@ const Register = () => {
         </Button>
       </Form>
 
-      {/* Modal for validation messages */}
       <Modal show={showModal} onHide={handleModalClose} centered>
         <Modal.Header closeButton>
-          <Modal.Title>Validation Error</Modal.Title>
+          <Modal.Title>Registration Message</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <p>{modalMessage}</p>

@@ -7,7 +7,7 @@ import './EmployeeDetails.css';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const EmployeeDetails = ({ employeeId }) => {
+const EmployeeDetails = () => {
   const [employee, setEmployee] = useState(null);
   const [schedules, setSchedules] = useState([]);
   const [todaySchedule, setTodaySchedule] = useState([]);
@@ -15,7 +15,8 @@ const EmployeeDetails = ({ employeeId }) => {
   const [attendancePercentage, setAttendancePercentage] = useState(0);
   const [timeDivision, setTimeDivision] = useState(null);
 
-  // Date formatting utility function
+  const loggedInUser = JSON.parse(localStorage.getItem('user'));
+
   const formatDate = (dateString) => {
     if (!dateString) return '';
     const date = new Date(dateString);
@@ -26,7 +27,6 @@ const EmployeeDetails = ({ employeeId }) => {
     });
   };
 
-  // Time formatting utility function
   const formatTime = (timeString) => {
     if (!timeString) return '';
     const [hours, minutes] = timeString.split(':');
@@ -55,7 +55,7 @@ const EmployeeDetails = ({ employeeId }) => {
     };
 
     schedules.forEach(schedule => {
-      switch (schedule.scheduleOfDay.toLowerCase()) {
+      switch (schedule.scheduleOfDay?.toLowerCase()) {
         case 'work':
           division.work++;
           break;
@@ -70,11 +70,6 @@ const EmployeeDetails = ({ employeeId }) => {
       }
     });
 
-    const total = Object.values(division).reduce((a, b) => a + b, 0);
-    const percentages = Object.values(division).map(value => 
-      ((value / total) * 100).toFixed(1)
-    );
-
     return {
       labels: ['Work', 'Meetings', 'Breaks', 'Other'],
       datasets: [{
@@ -85,7 +80,6 @@ const EmployeeDetails = ({ employeeId }) => {
     };
   };
 
-  // Chart options for the donut chart
   const chartOptions = {
     plugins: {
       legend: {
@@ -127,44 +121,46 @@ const EmployeeDetails = ({ employeeId }) => {
     responsive: true,
     maintainAspectRatio: false
   };
-  
+
   useEffect(() => {
-    // Fetch employee details
-    axios.get(`http://localhost:8080/employees/2`)
+    if (!loggedInUser?.id) return;
+
+    axios.get(`http://localhost:8080/employees/${loggedInUser.id}`)
       .then(res => setEmployee(res.data))
       .catch(err => console.error("Error fetching employee details:", err));
 
-    // Fetch employee schedules
-    axios.get(`http://localhost:8080/schedules/employee/2`)
+    axios.get(`http://localhost:8080/schedules/employee/${loggedInUser.id}`)
       .then(res => {
-        setSchedules(res.data);
-        const today = new Date().toISOString().split('T')[0];
+        const allSchedules = res.data;
+        setSchedules(allSchedules);
         
-        const todaySchedules = res.data.filter(schedule => 
-          schedule.date && schedule.date.startsWith(today)
+        const today = new Date().toISOString().split('T')[0];
+        const todaySchedules = allSchedules.filter(schedule => 
+          schedule.date?.startsWith(today)
         );
         
-        const upcomingSchedules = res.data.filter(schedule => 
+        const upcomingSchedules = allSchedules.filter(schedule => 
           schedule.date && new Date(schedule.date) > new Date(today)
         );
 
         setTodaySchedule(todaySchedules);
         setUpcomingSchedules(upcomingSchedules);
-        setAttendancePercentage(calculateAttendancePercentage(res.data));
-        setTimeDivision(calculateTimeDivision(res.data));
+        setAttendancePercentage(calculateAttendancePercentage(allSchedules));
+        setTimeDivision(calculateTimeDivision(allSchedules));
       })
       .catch(err => console.error("Error fetching employee schedules:", err));
-  }, [employeeId]);
+  }, [loggedInUser?.id]);
 
-  if (!employee) return <div>Loading...</div>;
+  if (!loggedInUser) return <div>Please login first</div>;
+  if (!employee) return <div>Loading employee data...</div>;
 
   return (
     <div className="employee-details">
-      <h2>Employee Details</h2>
+      <h2>Employee Dashboard</h2>
       <div className="employee-info">
         <p><strong>Name:</strong> {employee.name}</p>
         <p><strong>Employee ID:</strong> {employee.id}</p>
-        <p><strong>Position:</strong> {(employee.position && employee.position.trim()) || 'Software Developer'}</p>
+        <p><strong>Position:</strong> {employee.position || 'Not specified'}</p>
         <p><strong>Email:</strong> {employee.email}</p>
       </div>
 
@@ -220,11 +216,11 @@ const EmployeeDetails = ({ employeeId }) => {
               {upcomingSchedules.map(schedule => (
                 <li key={schedule.id}>
                   <p><strong>Date:</strong> {formatDate(schedule.date)}</p>
-                  <p><strong>Event:</strong> {schedule.scheduleOfDay || 'random meet'}</p>
+                  <p><strong>Event:</strong> {schedule.scheduleOfDay || 'Not specified'}</p>
                   <p><strong>Time:</strong> 
                     {schedule.startTime && schedule.endTime 
                       ? `${formatTime(schedule.startTime)} - ${formatTime(schedule.endTime)}` 
-                      : 'will be informed before 30mins'}
+                      : 'Time not specified'}
                   </p>
                   <p><strong>Leave:</strong> {schedule.leave ? 'Yes' : 'No'}</p>
                 </li>

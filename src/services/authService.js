@@ -1,38 +1,57 @@
-import axios from 'axios';
-
-const API_BASE_URL = 'http://localhost:8080'; // Replace with your backend URL
+const API_BASE_URL = "http://localhost:8080"; // Update if needed
 
 const authService = {
-  login: async (email, password) => {
+  registerEmployee: async (userData) => {
     try {
-      const response = await axios.post(`${API_BASE_URL}/authenticate`, {
-        email: email,
-        password: password,
+      const response = await fetch(`${API_BASE_URL}/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userData),
       });
-      return response.data; // If login is successful, return the success message from backend
-    } catch (error) {
-      // Log error to console for debugging
-      console.error('Login API Error:', error.response || error.message);
 
-      if (error.response) {
-        // If the error has a response object, we can check the status code and message
-        return Promise.reject({
-          status: error.response.status,
-          message: error.response.data || 'An error occurred during login.',
-        });
-      } else {
-        // In case there's no response, it's likely a network error
-        return Promise.reject({ status: 500, message: error.message });
-      }
+      if (!response.ok) throw new Error("Registration failed");
+
+      return await response.json();
+    } catch (error) {
+      console.error("Registration Error:", error.message);
+      throw error;
     }
   },
-  registerEmployee: async (employeeData) => {
+
+  login: async (loginData) => {
     try {
-      const response = await axios.post(`${API_BASE_URL}/addemployee`, employeeData);
-      return response.data;
+      const response = await fetch(`${API_BASE_URL}/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(loginData),
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || "Login failed");
+
+      // Store token & role properly
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("role", data.role);
+
+      return data; // Return data to be used for navigation
     } catch (error) {
-      throw new Error(error.response?.data?.message || error.message || 'An error occurred during registration.');
+      console.error("Login Error:", error.message);
+      throw error;
     }
+  },
+
+  logout: () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    window.location.href = "/"; // Redirect to login after logout
+  },
+
+  isAuthenticated: () => {
+    return !!localStorage.getItem("token");
+  },
+
+  getUserRole: () => {
+    return localStorage.getItem("role");
   },
 };
 
