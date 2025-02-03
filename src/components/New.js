@@ -3,29 +3,93 @@ import FullCalendar from "@fullcalendar/react";
 import resourceTimeGridPlugin from "@fullcalendar/resource-timegrid";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import { Bar } from "react-chartjs-2";
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from "chart.js";
+import { Bar, Doughnut } from "react-chartjs-2";
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement } from "chart.js";
 import axios from "axios";
 import "./Calendar1.css";
-import EventTypeDonut from "./EventTypeDonut";
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement);
+
+const EventTypeDonut = ({ selectedEmployeeIds, events }) => {
+  const [chartData, setChartData] = useState({
+    labels: [],
+    datasets: [{
+      data: [],
+      backgroundColor: [],
+      hoverBackgroundColor: []
+    }]
+  });
+
+  useEffect(() => {
+    const filteredEvents = selectedEmployeeIds.length > 0
+      ? events.filter(event => selectedEmployeeIds.includes(event.resourceId))
+      : events;
+
+    const eventTypes = {};
+    filteredEvents.forEach(event => {
+      const type = event.title;
+      eventTypes[type] = (eventTypes[type] || 0) + 1;
+    });
+
+    const totalEvents = filteredEvents.length;
+    const labels = Object.keys(eventTypes);
+    const data = Object.values(eventTypes).map(count => 
+      totalEvents > 0 ? ((count / totalEvents) * 100).toFixed(1) : 0
+    );
+    
+    const backgroundColor = labels.map(() => `#${Math.floor(Math.random()*16777215).toString(16)}`);
+    const hoverBackgroundColor = backgroundColor.map(color => color + "CC");
+
+    setChartData({
+      labels,
+      datasets: [{
+        data,
+        backgroundColor,
+        hoverBackgroundColor
+      }]
+    });
+  }, [selectedEmployeeIds, events]);
+
+  return (
+    <div className="donut-chart">
+      <h2>Event Type Distribution</h2>
+      <Doughnut 
+        data={chartData}
+        options={{
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'right' },
+            tooltip: {
+              callbacks: {
+                label: (context) => {
+                  const label = context.label || '';
+                  const value = context.parsed || 0;
+                  return `${label}: ${value}%`;
+                }
+              }
+            }
+          }
+        }}
+      />
+    </div>
+  );
+};
 
 const NCalendarAndAttendance = () => {
   const [employees, setEmployees] = useState([]);
   const [events, setEvents] = useState([]);
-  const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const [selectedEmployeeIds, setSelectedEmployeeIds] = useState([]);
+  const [manager, setManager] = useState(null);
   const [newEvent, setNewEvent] = useState({
     title: "",
     startTime: "",
     endTime: "",
     employeeId: ""
   });
-  const [selectedEmployees, setSelectedEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Function to format date and time for FullCalendar
   const formatDateTime = (date, time) => {
     if (!date || !time) return null;
     const [hours, minutes] = time.split(':');
@@ -38,17 +102,17 @@ const NCalendarAndAttendance = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        // Fetch employees
+        
+        const managerResponse = await axios.get("http://localhost:8080/manager/findemployee/1");
+        setManager(managerResponse.data);
+
         const teamResponse = await axios.get("http://localhost:8080/manager/1/team");
         const managerTeam = teamResponse.data || [];
-        setEmployees(managerTeam);
-        setSelectedEmployees(managerTeam.map(emp => emp.name));
+        setEmployees([managerResponse.data, ...managerTeam]);
 
-        // Fetch schedules
         const schedulesResponse = await axios.get("http://localhost:8080/schedules");
         const scheduleData = schedulesResponse.data;
 
-        // Transform schedules into FullCalendar events
         const transformedEvents = scheduleData
           .filter(schedule => schedule.employee && schedule.employee.id)
           .map(schedule => ({
@@ -79,7 +143,11 @@ const NCalendarAndAttendance = () => {
   }, []);
 
   const handleEmployeeClick = (employeeId) => {
-    setSelectedEmployee(employeeId === selectedEmployee ? null : employeeId);
+    setSelectedEmployeeIds(prev => 
+      prev.includes(employeeId)
+        ? prev.filter(id => id !== employeeId)
+        : [...prev, employeeId]
+    );
   };
 
   const handleInputChange = (e) => {
@@ -131,8 +199,8 @@ const NCalendarAndAttendance = () => {
     }
   };
 
-  const filteredEvents = selectedEmployee
-    ? events.filter(event => event.resourceId === selectedEmployee)
+  const filteredEvents = selectedEmployeeIds.length > 0
+    ? events.filter(event => selectedEmployeeIds.includes(event.resourceId))
     : events;
 
   const resources = employees.map(emp => ({
@@ -140,19 +208,11 @@ const NCalendarAndAttendance = () => {
     title: emp.name
   }));
 
-  const handleCheckboxChange = (name) => {
-    setSelectedEmployees(prev =>
-      prev.includes(name)
-        ? prev.filter(emp => emp !== name)
-        : [...prev, name]
-    );
-  };
-
   const getEmployeeSchedule = (id) => events.filter(event => event.resourceId === id);
 
   const getBarChartData = () => {
     const filteredEmployees = employees.filter(emp =>
-      selectedEmployees.includes(emp.name)
+      selectedEmployeeIds.includes(emp.id)
     );
 
     return {
@@ -215,7 +275,7 @@ const NCalendarAndAttendance = () => {
             <option value="">Select Employee</option>
             {employees.map(emp => (
               <option key={emp.id} value={emp.id}>
-                {emp.name}
+                {emp.name} {emp.id === manager.id ? '(You)' : ''}
               </option>
             ))}
           </select>
@@ -230,10 +290,13 @@ const NCalendarAndAttendance = () => {
             employees.map(emp => (
               <div
                 key={emp.id}
-                className={`employee-box ${selectedEmployee === emp.id ? "selected" : ""}`}
+                className={`employee-box ${selectedEmployeeIds.includes(emp.id) ? "selected" : ""}`}
                 onClick={() => handleEmployeeClick(emp.id)}
               >
-                {emp.name}
+                {emp.name} {emp.id === manager.id ? '(You)' : ''}
+                {selectedEmployeeIds.includes(emp.id) && (
+                  <span className="checkmark">✓</span>
+                )}
               </div>
             ))
           ) : (
@@ -280,18 +343,6 @@ const NCalendarAndAttendance = () => {
 
       <div className="attendance-chart">
         <h2>Team Attendance Overview</h2>
-        <div className="employee-select">
-          {employees.map(emp => (
-            <label key={emp.id} className="checkbox-label">
-              <input
-                type="checkbox"
-                checked={selectedEmployees.includes(emp.name)}
-                onChange={() => handleCheckboxChange(emp.name)}
-              />
-              {emp.name}
-            </label>
-          ))}
-        </div>
         <div className="chart-container">
           <Bar
             data={getBarChartData()}
@@ -301,10 +352,34 @@ const NCalendarAndAttendance = () => {
               plugins: {
                 legend: {
                   position: 'top',
+                  labels: {
+                    font: {
+                      size: 14
+                    }
+                  }
                 },
                 title: {
                   display: true,
-                  text: 'Attendance Statistics'
+                  text: 'Attendance Statistics (Based on selected team members)',
+                  font: {
+                    size: 18
+                  }
+                }
+              },
+              scales: {
+                x: {
+                  ticks: {
+                    font: {
+                      size: 12
+                    }
+                  }
+                },
+                y: {
+                  ticks: {
+                    font: {
+                      size: 12
+                    }
+                  }
                 }
               }
             }}
@@ -312,7 +387,7 @@ const NCalendarAndAttendance = () => {
         </div>
       </div>
       
-      <EventTypeDonut />
+      <EventTypeDonut selectedEmployeeIds={selectedEmployeeIds} events={events} />
     </div>
   );
 };

@@ -1,61 +1,125 @@
-import React, { useState } from 'react';
-import './Login.css'; 
-
+import React, { useState } from "react";
+import { Form, Button, Modal } from "react-bootstrap";
+import authService from "../services/authService";
+import { useNavigate } from "react-router-dom";
+// import bootst
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Login = () => {
-    const [empIdOrEmail, setEmpIdOrEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
+  const [loginDetails, setLoginDetails] = useState({ email: "", password: "" });
+  const [showModal, setShowModal] = useState(false); // Control modal visibility
+  const [modalMessage, setModalMessage] = useState(""); // Error message to display in modal
+  const [emailError, setEmailError] = useState(false); // Track email validation error
+  const navigate = useNavigate();
+  
 
-    const handleLogin = (e) => {
-        e.preventDefault();
-        setError('');
+  const handleLoginChange = (e) => {
+    const { name, value } = e.target;
+    setLoginDetails((prev) => ({ ...prev, [name]: value }));
 
-        // Validate email format
-        if (!empIdOrEmail.endsWith('@evernorth.com') && !/^\d+$/.test(empIdOrEmail)) {
-            setError('Please enter a valid Employee ID or Email '); // ending with @evernorth.com
-            return;
-        }
+    // Real-time email validation
+    if (name === "email") {
+      const isValidEmail = value.includes("@") && value.endsWith(".com");
+      setEmailError(!isValidEmail);
+    }
+  };
 
-        // Validate password strength
-        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-        if (!passwordRegex.test(password)) {
-            setError('Password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character.');
-            return;
-        }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+  
+    // Validate fields
+    if (!loginDetails.email) {
+      setModalMessage("Email field should not be empty.");
+      setShowModal(true);
+      return;
+    }
+    if (!loginDetails.password) {
+      setModalMessage("Password field should not be empty.");
+      setShowModal(true);
+      return;
+    }
+    if (emailError) {
+      setModalMessage("Invalid email. Please provide a valid email.");
+      setShowModal(true);
+      return;
+    }
+    
+    try {
+      // Attempt login via authService
+      const response = await authService.login(loginDetails.email, loginDetails.password);
+      // Display the success message (including role)
+      setModalMessage(response); 
+      setShowModal(true);
+      navigate("/dashboard");
+      
+    } catch (error) {
+      // Handle error properly based on status and message
+      if (error.status === 401) {
+        setModalMessage(error.message || "Invalid email or password");
+      } else {
+        setModalMessage("An error occurred during login.");
+      }
+      setShowModal(true);
+    }
+  };
+  
 
-        console.log('Logging in with:', { empIdOrEmail, password });  // Handle login logic here (e.g., API call)
-    };
+  const handleModalClose = () => setShowModal(false);
 
-    return (
-        <div className="login-container">
-            <h2>Login</h2>
-            {error && <p className="error-message">{error}</p>}
-            <form onSubmit={handleLogin}>
-                <div>
-                    <label>Employee ID / Email:</label>
-                    <input
-                        type="text"
-                        value={empIdOrEmail}
-                        onChange={(e) => setEmpIdOrEmail(e.target.value)}
-                        required
-                    />
-                </div>
-                <div>
-                    <label>Password:</label>
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
-                </div>
-                <button type="submit">Login</button>
-                <br></br><br></br>
-                
-            </form>
-        </div>
-    );
+  return (
+    <div>
+      <h3 className="text-center mt-4">Login</h3>
+
+      <Form onSubmit={handleSubmit}>
+        <Form.Group className="mb-3" controlId="formEmail">
+          <Form.Label>Email</Form.Label>
+          <Form.Control
+            type="email"
+            placeholder="Enter email"
+            name="email"
+            value={loginDetails.email}
+            onChange={handleLoginChange}
+            isInvalid={emailError} // Highlight the field if email is invalid
+          />
+          {emailError && (
+            <Form.Text className="text-danger">
+              Invalid email.
+            </Form.Text>
+          )}
+        </Form.Group>
+
+        <Form.Group className="mb-3" controlId="formPassword">
+          <Form.Label>Password</Form.Label>
+          <Form.Control
+            type="password"
+            placeholder="Password"
+            name="password"
+            value={loginDetails.password}
+            onChange={handleLoginChange}
+          />
+        </Form.Group>
+
+        <Button variant="primary" type="submit">
+          Submit
+        </Button>
+      </Form>
+
+      {/* Modal for validation messages */}
+      <Modal show={showModal} onHide={handleModalClose} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Error</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>{modalMessage}</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleModalClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </div>
+  );
 };
 
 export default Login;

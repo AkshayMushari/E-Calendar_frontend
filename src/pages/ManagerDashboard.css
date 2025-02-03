@@ -1,0 +1,30 @@
+.dashboard-container {
+    display: flex; /* Use flexbox for layout */
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+}
+
+.sidebar {
+    background-color: #f0f0f0; /* Light background for sidebar */
+}
+
+.left-sidebar {
+    width: 15%; /* Left sidebar width */
+    padding-right: 20px; /* Padding to separate from main content */
+}
+
+.main-content {
+    width: 60%; /* Main content width */
+    padding-left: 20px; /* Padding to separate from sidebars */
+}
+
+.right-sidebar {
+    width: 20%; /* Right sidebar width */
+    margin-left: 5%; /* Space between main content and right sidebar */
+}
+
+.left-sidebar h2,
+.right-sidebar h2 {
+    text-align: center;
+}

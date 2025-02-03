@@ -36,3 +36,135 @@
     transform: rotate(360deg);
   }
 }
+
+/* =========================================== */
+
+/* Custom styles for the header */
+.custom-header {
+  background-color: #6c1013 !important; /* Blue background */
+  padding: 10px 0 !important; /* Add some padding */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important; /* Subtle shadow */
+}
+
+.custom-header .navbar-brand {
+  font-size: 1.75rem !important; /* Increase font size */
+  font-weight: bold !important;
+  color: rgb(20, 107, 8) !important; /* White text color */
+  display: flex !important;
+  align-items: center !important; /* Align logo and text vertically */
+}
+
+.custom-header .navbar-brand img {
+  margin-right: 100px !important; /* Add space between logo and text */
+}
+
+/* Optional: Add hover effect to the brand */
+.custom-header .navbar-brand:hover {
+  color: #0e457d !important; /* Slightly lighter white on hover */
+}
+
+/* Center the card vertically and horizontally */
+.vh-100 {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Add some padding and shadow to the card */
+.card {
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Style the header */
+h2 {
+  color: #007bff; /* Blue color for the header */
+  font-weight: bold;
+}
+
+/* Add spacing between sections */
+.border-end {
+  border-right: 1px solid #dee2e6; /* Light gray border */
+}
+/* General styles for the entire app */
+body {
+  background-color: #f8f9fa; /* Light gray background */
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* Center container styling */
+.container {
+  max-width: 500px;
+  padding: 20px;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Buttons for toggling Login/Register */
+button.m-2 {
+  font-size: 16px;
+  padding: 10px 20px;
+}
+
+/* Header section */
+header {
+  background-color: #007bff; /* Bootstrap Primary Color */
+  color: white;
+  padding: 15px 0;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+}
+
+/* Form input styling */
+form .form-control {
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 14px;
+}
+
+form .form-control:focus {
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.5); /* Highlighted on focus */
+  border-color: #007bff;
+}
+
+/* Buttons for forms */
+form button {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 8px;
+  font-weight: bold;
+  transition: all 0.3s ease-in-out;
+}
+
+form button:hover {
+  background-color: #0056b3; /* Darker shade of blue */
+}
+
+/* Toggle buttons (Login/Register) */
+.toggle-buttons .btn {
+  width: 45%;
+}
+
+/* Additional spacing */
+h3 {
+  margin-bottom: 20px;
+}
+
+.mb-3 {
+  margin-bottom: 15px !important;
+}
+
+.custom-header {
+  position: sticky;
+  top: 0;
+  z-index: 1020; /* Ensure the header stays on top of content */
+}
+
